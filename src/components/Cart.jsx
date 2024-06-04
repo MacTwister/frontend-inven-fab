@@ -8,10 +8,10 @@ import { faClose } from '@fortawesome/free-solid-svg-icons'
 import { faCirclePlus } from '@fortawesome/free-solid-svg-icons'
 import { faCircleMinus } from '@fortawesome/free-solid-svg-icons';
 
-export const Cart = ({ cartItems, removeFromCart, updateQuantity, isCartModalOpen, toggleCartModal }) => {
+export const Cart = ({ cartItems, removeFromCart, updateQuantity, isCartModalOpen, toggleCartModal, clearCart, codeTitle }) => {
     const [totalCost, setTotalCost] = useState(0);
     const [formData, setFormData] = useState({
-        workshopTitle: '',
+        workshopTitle: codeTitle,
         name: '',
         email: ''
     });
@@ -23,6 +23,13 @@ export const Cart = ({ cartItems, removeFromCart, updateQuantity, isCartModalOpe
         const total = cartItems.reduce((sum, item) => sum + parseFloat(item.Price.replace(/[$,]/g, '')) * item.quantity, 0);
         setTotalCost(total);
     }, [cartItems]);
+
+    useEffect(() => {
+        setFormData({
+            ...formData,
+            workshopTitle: codeTitle,
+        });
+    }, [codeTitle]);
 
     useEffect(() => {
         // Verificar si todos los campos del formulario están llenos

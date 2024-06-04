@@ -6,7 +6,17 @@ import { Navbar } from './components/Navbar'
 import { Inventary } from './components/Inventary'
 import { Cart } from './components/Cart'
 
+function slugToTitle(slug) {
+  return slug
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
 function App() {
+  const [code, setCode] = useState('');
+  const [codeTitle, setCodeTitle] = useState('');
+  const [isCartAccessible, setIsCartAccessible] = useState(false);
   const [cartItems, setCartItems] = useState([]);
   const [showScroll, setShowScroll] = useState(false);
   const [isCartModalOpen, setIsCartModalOpen] = useState(false);
@@ -14,6 +24,15 @@ function App() {
   const toggleCartModal = () => setIsCartModalOpen(!isCartModalOpen);
 
   useEffect(() => {
+    const queryParams = new URLSearchParams(window.location.search);
+    const codeParam = queryParams.get('code');
+    if (codeParam) {
+      setCode(codeParam);
+      // TODO: Validate the code? for now accept if provided
+      setIsCartAccessible(true);
+      setCodeTitle(slugToTitle(codeParam));
+    }
+
     window.addEventListener('scroll', checkScrollTop);
     return () => {
       window.removeEventListener('scroll', checkScrollTop);
@@ -68,13 +87,17 @@ function App() {
       <div className='bg-primary w-full overflow-hidden'>
         <div className={`${styles.paddingX} ${styles.flexCenter}`}>
           <div className='{`${styles.boxWidth}`}'>
-            <Navbar cartItems={cartItems} toggleCartModal={toggleCartModal} />
+            <Navbar isCartAccessible={isCartAccessible} cartItems={cartItems} toggleCartModal={toggleCartModal} />
           </div>
         </div>
 
         <div className='pt-20'>
-          <div className={`${styles.boxWidth}`}>
-            <h1 className={`${styles.heading2} text-center`}>Inventory</h1>
+          <div className={`${styles.boxWidth} pt-8`}>
+            <p className={`${styles.paragraph} text-center`}>
+              Please select your inventory selection for the workshop
+              &nbsp;<strong>"{codeTitle}"</strong>, and submit your Cart selection in top right.
+            </p>
+
           </div>
         </div>
 
@@ -85,8 +108,9 @@ function App() {
             cartItems={cartItems}
             removeFromCart={removeFromCart}
             updateQuantity={updateQuantity}
+            codeTitle={codeTitle}
           />
-          <Inventary addToCart={addToCart} />
+          <Inventary addToCart={addToCart} isCartAccessible={isCartAccessible} />
         </main>
 
         {showScroll &&

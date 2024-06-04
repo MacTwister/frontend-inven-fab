@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCartPlus } from '@fortawesome/free-solid-svg-icons'
 import fabLogo from '../assets/Fab24_WhiteLogo.png'
 
-export const Inventary = ({ addToCart }) => {
+export const Inventary = ({ addToCart, isCartAccessible }) => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
@@ -114,9 +114,11 @@ export const Inventary = ({ addToCart }) => {
                                             <a href={item.Datasheet} target="_blank" rel="noopener noreferrer" className='font-medium text-yellow-500 dark:text-yellow-500 hover:underline' >Datasheet</a>
                                         </td>
                                         <td className="px-6 py-4">
+                                            {isCartAccessible && (
                                             <button className="font-medium text-blue-600 dark:text-blue-500 hover:underline" onClick={() => handleAddToCart(item)}>
                                                 <FontAwesomeIcon icon={faCartPlus} color='hotpink' size="lg" />
                                             </button>
+                                            )}
                                         </td>
                                     </tr>
                                 ))}
