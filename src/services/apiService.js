@@ -5,6 +5,11 @@ function getInventary() {
         .then((response) => response.json())
 }
 
+function hasSavedEntry(code) {
+    return fetch(`${API_URL}/check/${code}`) // /${code}
+        .then((response) => response.json())
+}
+
 function sendEmail(jsonData) {
     return fetch(`${API_URL}/send-email`, {
         method: 'POST',
@@ -19,4 +24,5 @@ function sendEmail(jsonData) {
 export const apiService = {
     getInventary,
     sendEmail,
+    hasSavedEntry,
 }

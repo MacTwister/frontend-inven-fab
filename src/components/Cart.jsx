@@ -8,7 +8,7 @@ import { faClose } from '@fortawesome/free-solid-svg-icons'
 import { faCirclePlus } from '@fortawesome/free-solid-svg-icons'
 import { faCircleMinus } from '@fortawesome/free-solid-svg-icons';
 
-export const Cart = ({ cartItems, removeFromCart, updateQuantity, isCartModalOpen, toggleCartModal, clearCart, codeTitle }) => {
+export const Cart = ({ cartItems, removeFromCart, updateQuantity, isCartModalOpen, toggleCartModal, clearCart, code, codeTitle }) => {
     const [totalCost, setTotalCost] = useState(0);
     const [formData, setFormData] = useState({
         workshopTitle: codeTitle,
@@ -62,6 +62,7 @@ export const Cart = ({ cartItems, removeFromCart, updateQuantity, isCartModalOpe
         e.preventDefault();
 
         const payload = {
+            code: code,
             items: cartItems.map(item => ({
                 id: item.Item,
                 quantity: item.quantity

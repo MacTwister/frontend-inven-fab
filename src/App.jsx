@@ -26,6 +26,7 @@ function App() {
   const [showScroll, setShowScroll] = useState(false);
   const [isCartModalOpen, setIsCartModalOpen] = useState(false);
   const [nothingPlease, setNothingPlease] = useState(nothingParam === '1');
+  const [saveLocked, setSaveLocked] = useState(false);
   const toggleCartModal = () => setIsCartModalOpen(!isCartModalOpen);
 
   useEffect(() => {
@@ -33,6 +34,17 @@ function App() {
       // TODO: Validate the code? for now accept if provided
       setCodeTitle(slugToTitle(codeParam));
       setIsCartAccessible(true);
+      
+      apiService.hasSavedEntry(code)
+        .then((data) => {
+            if (data.status === true) {
+              setSaveLocked(true);
+              setIsCartAccessible(false);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching status check:', error);
+        });
     }
   }, [code]);
 
@@ -52,6 +64,7 @@ function App() {
 
   const sendNothingRequest = async (codeTitle) => {
     const payload = {
+        code: code,
         items: [{
             id: 'Nothing Please',
             quantity: 1
@@ -151,16 +164,23 @@ function App() {
 
         <div className='pt-20'>
           <div className={`${styles.boxWidth} pt-8`}>
-            {code ? ( 
-            <p className={`${styles.paragraph} text-center`}>
-              Please make a selection from our inventory your workshop <strong>"{codeTitle}"</strong>, 
-              and then submit your shopping cart from the top right.
-            </p>
+
+            {saveLocked ? (
+              <p className={`${styles.paragraph} text-center`}>
+                You have already submitted a inventory selection for the workshop <strong>"{codeTitle}"</strong>!
+              </p>
             ) : (
-            <p className={`${styles.paragraph} text-center`}>
-            To request materials for your workshop, please find the unique url you recieved in an email. 
-            If you experience any issues please contact the fabevent team.
-            </p>
+              code ? ( 
+              <p className={`${styles.paragraph} text-center`}>
+                Please make a selection from our inventory your workshop <strong>"{codeTitle}"</strong>, 
+                and then submit your shopping cart from the top right.
+              </p>
+              ) : (
+              <p className={`${styles.paragraph} text-center`}>
+              To request materials for your workshop, please find the unique url you recieved in an email. 
+              If you experience any issues please contact the fabevent team.
+              </p>
+              )
             )}
           </div>
         </div>
@@ -173,6 +193,7 @@ function App() {
             removeFromCart={removeFromCart}
             updateQuantity={updateQuantity}
             clearCart={clearCart}
+            code={code}
             codeTitle={codeTitle}
           />
           <Inventary addToCart={addToCart} isCartAccessible={isCartAccessible} />

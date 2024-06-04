@@ -54,7 +54,7 @@ export const Inventary = ({ addToCart, isCartAccessible }) => {
     }
 
     if (error) {
-        return <div>"Error loading data"</div>;
+        return <div className="text-center text-2xl text-red-600 mt-10">"Error loading data"</div>;
     }
 
     return (
