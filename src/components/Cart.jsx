@@ -81,6 +81,7 @@ export const Cart = ({ cartItems, removeFromCart, updateQuantity, isCartModalOpe
                     name: '',
                     email: ''
                 });
+                clearCart();
             } else {
                 console.log("Error sending email:", data);
             }

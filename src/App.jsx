@@ -54,6 +54,11 @@ function App() {
     setCartItems(cartItems.filter((cartItem) => cartItem.id !== item.id));
   };
 
+  const clearCart = () => {
+    setCartItems([]);
+    setState([]);
+  };
+
   const updateQuantity = (item, quantity) => {
     // if quantity is 0, remove the item from the cart. Max quantity is 10
     if (quantity === 0) {
@@ -108,6 +113,7 @@ function App() {
             cartItems={cartItems}
             removeFromCart={removeFromCart}
             updateQuantity={updateQuantity}
+            clearCart={clearCart}
             codeTitle={codeTitle}
           />
           <Inventary addToCart={addToCart} isCartAccessible={isCartAccessible} />
