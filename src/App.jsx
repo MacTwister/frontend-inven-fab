@@ -5,6 +5,7 @@ import fabLogo from './assets/Fab24_WhiteLogo.png'
 import { Navbar } from './components/Navbar'
 import { Inventary } from './components/Inventary'
 import { Cart } from './components/Cart'
+import { apiService } from './services/apiService';
 
 function slugToTitle(slug) {
   return slug
@@ -13,31 +14,58 @@ function slugToTitle(slug) {
     .join(' ');
 }
 
+const queryParams = new URLSearchParams(window.location.search);
+const codeParam = queryParams.get('code');
+const nothingParam = queryParams.get('nothingplease');
+
 function App() {
-  const [code, setCode] = useState('');
+  const [code, setCode] = useState(codeParam);
   const [codeTitle, setCodeTitle] = useState('');
   const [isCartAccessible, setIsCartAccessible] = useState(false);
   const [cartItems, setCartItems] = useState([]);
   const [showScroll, setShowScroll] = useState(false);
   const [isCartModalOpen, setIsCartModalOpen] = useState(false);
-
+  const [nothingPlease, setNothingPlease] = useState(nothingParam === '1');
   const toggleCartModal = () => setIsCartModalOpen(!isCartModalOpen);
 
   useEffect(() => {
-    const queryParams = new URLSearchParams(window.location.search);
-    const codeParam = queryParams.get('code');
-    if (codeParam) {
-      setCode(codeParam);
+    if (code) {
       // TODO: Validate the code? for now accept if provided
-      setIsCartAccessible(true);
       setCodeTitle(slugToTitle(codeParam));
+      setIsCartAccessible(true);
     }
+  }, [code]);
 
+  useEffect(() => {
     window.addEventListener('scroll', checkScrollTop);
     return () => {
       window.removeEventListener('scroll', checkScrollTop);
     };
   }, [showScroll]);
+
+  useEffect(() => {
+    if (nothingPlease) {
+      setIsCartAccessible(false);
+      sendNothingRequest(codeTitle);
+    }
+  }, [nothingPlease]);
+
+  const sendNothingRequest = async (codeTitle) => {
+    const payload = {
+        items: [{
+            id: 'Nothing Please',
+            quantity: 1
+        }],
+        subtotal: (0).toFixed(2),
+        formData: { workshopTitle: codeTitle, name: '', email: '' }
+    };
+
+    try {
+      const response = await apiService.sendEmail(payload)
+    } catch (error) {
+        console.error('Error sending email:', error);
+    }
+  };
 
   const addToCart = (item) => {
     const existingItem = cartItems.find((cartItem) => cartItem.id === item.id);
@@ -87,6 +115,31 @@ function App() {
     });
   };
 
+  if (nothingPlease) {
+    return (
+      <div className='bg-primary w-full overflow-hidden'>
+        <div className={`${styles.paddingX} ${styles.flexCenter}`}>
+          <div className='{`${styles.boxWidth}`}'>
+            <Navbar isCartAccessible={isCartAccessible} cartItems={cartItems} toggleCartModal={toggleCartModal} />
+          </div>
+        </div>
+
+        <div className='pt-20'>
+          <div className={`max-w-md pt-8 mx-auto`}>
+            <p className={`${styles.paragraph} text-center`}>
+              Ok, Thank you for telling us you do not require any materials from the FAB24 Inventory. If you have any questions, contact the FAB24 team!
+              <br />
+              Have a magical day full of luck!
+            </p>
+            <img src="i-don't-need-your-help-bender.gif" alt="i-don't-need-your-help-bender" className="mt-8 mx-auto" />
+            <p className={`mt-8 ${styles.paragraph} text-center`}>
+            </p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <>
       <div className='bg-primary w-full overflow-hidden'>
@@ -98,11 +151,17 @@ function App() {
 
         <div className='pt-20'>
           <div className={`${styles.boxWidth} pt-8`}>
+            {code ? ( 
             <p className={`${styles.paragraph} text-center`}>
-              Please select your inventory selection for the workshop
-              &nbsp;<strong>"{codeTitle}"</strong>, and submit your Cart selection in top right.
+              Please make a selection from our inventory your workshop <strong>"{codeTitle}"</strong>, 
+              and then submit your shopping cart from the top right.
             </p>
-
+            ) : (
+            <p className={`${styles.paragraph} text-center`}>
+            To request materials for your workshop, please find the unique url you recieved in an email. 
+            If you experience any issues please contact the fabevent team.
+            </p>
+            )}
           </div>
         </div>
 
