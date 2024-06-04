@@ -46,7 +46,12 @@ function App() {
             console.error('Error fetching status check:', error);
         });
     }
-  }, [code]);
+
+    if (nothingPlease) {
+      setIsCartAccessible(false);
+      sendNothingRequest(codeTitle);
+    }
+  }, []);
 
   useEffect(() => {
     window.addEventListener('scroll', checkScrollTop);
@@ -54,13 +59,6 @@ function App() {
       window.removeEventListener('scroll', checkScrollTop);
     };
   }, [showScroll]);
-
-  useEffect(() => {
-    if (nothingPlease) {
-      setIsCartAccessible(false);
-      sendNothingRequest(codeTitle);
-    }
-  }, [nothingPlease]);
 
   const sendNothingRequest = async (codeTitle) => {
     const payload = {
