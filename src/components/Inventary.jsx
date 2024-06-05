@@ -94,7 +94,6 @@ export const Inventary = ({ addToCart, isCartAccessible }) => {
                                     <th className="px-6 py-3 uppercase font-semibold text-sm">Description</th>
                                     <th className="px-6 py-3 uppercase font-semibold text-sm">Type</th>
                                     <th className="px-6 py-3 uppercase font-semibold text-sm">FabAcademy Week Inventory</th>
-                                    <th className="px-6 py-3 uppercase font-semibold text-sm">Price</th>
                                     <th className="px-6 py-3 uppercase font-semibold text-sm">More info</th>
                                     <th className="px-6 py-3 uppercase font-semibold text-sm">Action</th>
                                 </tr>
@@ -109,7 +108,6 @@ export const Inventary = ({ addToCart, isCartAccessible }) => {
                                         <td className="px-6 py-4  text-gray-900 dark:text-gray-300">{item.Descripción}</td>
                                         <td className="px-6 py-4  text-gray-900 dark:text-gray-300">{item.Type}</td>
                                         <td className="px-6 py-4  text-gray-900 dark:text-gray-300">{item.Week}</td>
-                                        <td className="px-6 py-4  text-gray-900 dark:text-gray-300">{item.Price}</td>
                                         <td className="px-6 py-4  text-gray-900 dark:text-gray-300">
                                             <a href={item.Datasheet} target="_blank" rel="noopener noreferrer" className='font-medium text-yellow-500 dark:text-yellow-500 hover:underline' >Datasheet</a>
                                         </td>
