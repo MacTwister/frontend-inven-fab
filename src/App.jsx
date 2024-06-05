@@ -139,15 +139,16 @@ function App() {
         </div>
 
         <div className='pt-20'>
-          <div className={`max-w-md pt-8 mx-auto`}>
-            <p className={`${styles.paragraph} text-center`}>
+          <div className={`max-w-md pt-8 mx-auto ${styles.paragraph} text-center`}>
+            <p className={`text-2xl border-b border-dashed border-gray-500 pb-6 mb-6`}>
+              Workshop Title: {codeTitle}
+            </p>
+            <p>
               Ok, Thank you for telling us you do not require any materials from the FAB24 Inventory. If you have any questions, contact the FAB24 team!
               <br />
               Have a magical day full of luck!
             </p>
             <img src="i-don't-need-your-help-bender.gif" alt="i-don't-need-your-help-bender" className="mt-8 mx-auto" />
-            <p className={`mt-8 ${styles.paragraph} text-center`}>
-            </p>
           </div>
         </div>
       </div>
@@ -168,18 +169,24 @@ function App() {
 
             {saveLocked ? (
               <p className={`${styles.paragraph} text-center`}>
-                You have already submitted a inventory selection for the workshop <strong>"{codeTitle}"</strong>!
+                !! You have already submitted a inventory selection for the workshop <strong>"{codeTitle}"</strong>!
               </p>
             ) : (
               code ? ( 
-              <p className={`${styles.paragraph} text-center`}>
-                Please make a selection from our inventory your workshop <strong>"{codeTitle}"</strong>, 
-                and then submit your shopping cart from the top right.
-              </p>
+                <div className={`${styles.paragraph} text-center`}>
+                  <p className={`text-2xl border-b border-dashed border-gray-500 pb-6 mb-6`}>
+                    Workshop Title: {codeTitle}
+                  </p>
+                  <p>
+                    Please make a selection from our inventory for your workshop 
+                    and then submit your shopping cart from the top right.
+                  </p>
+                </div>
               ) : (
               <p className={`${styles.paragraph} text-center`}>
-              To request materials for your workshop, please find the unique url you recieved in an email. 
-              If you experience any issues please contact the fabevent team.
+                To request materials for your workshop, please find the unique url you recieved in an email. 
+                <br />
+                If you experience any issues please contact the FAB24 event team.
               </p>
               )
             )}

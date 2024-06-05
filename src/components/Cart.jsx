@@ -265,7 +265,7 @@ export const Cart = ({ cartItems, removeFromCart, updateQuantity, isCartModalOpe
                                                                 ?
                                                                 <button type="submit" className='flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700'>Send Cart</button>
                                                                 :
-                                                                <button type="submit" className='flex items-center justify-center rounded-md border border-transparent bg-gray-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-gray-700' disabled>Empty cart</button>
+                                                                <button type="submit" className='flex items-center justify-center rounded-md border border-transparent bg-gray-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-gray-700' disabled>Submit</button>
                                                             }
                                                         </div>
                                                     </div>
