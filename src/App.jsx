@@ -33,23 +33,26 @@ function App() {
     if (code) {
       // TODO: Validate the code? for now accept if provided
       setCodeTitle(slugToTitle(codeParam));
-      setIsCartAccessible(true);
+
+      if (nothingPlease) {
+        sendNothingRequest(slugToTitle(codeParam));
+
+        return;
+      }
       
       apiService.hasSavedEntry(code)
         .then((data) => {
             if (data.status === true) {
               setSaveLocked(true);
               setIsCartAccessible(false);
+            } else {
+              setIsCartAccessible(true);
             }
         })
         .catch(error => {
             console.error('Error fetching status check:', error);
+            setIsCartAccessible(true);
         });
-    }
-
-    if (nothingPlease) {
-      setIsCartAccessible(false);
-      sendNothingRequest(codeTitle);
     }
   }, []);
 
@@ -60,7 +63,7 @@ function App() {
     };
   }, [showScroll]);
 
-  const sendNothingRequest = async (codeTitle) => {
+  const sendNothingRequest = async (workshopTitle) => {
     const payload = {
         code: code,
         items: [{
@@ -68,7 +71,7 @@ function App() {
             quantity: 1
         }],
         subtotal: (0).toFixed(2),
-        formData: { workshopTitle: codeTitle, name: '', email: '' }
+        formData: { workshopTitle: workshopTitle, name: '', email: '' }
     };
 
     try {
