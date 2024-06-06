@@ -17,6 +17,12 @@ export const Cart = ({ cartItems, removeFromCart, updateQuantity, isCartModalOpe
     });
     const [isFormComplete, setIsFormComplete] = useState(false);
     const [emailSent, setEmailSent] = useState(false);
+    const [formError, setFormError] = useState('');
+
+    useEffect(() => {
+        setEmailSent(false);
+        setFormError('');
+    }, [isCartModalOpen]);
 
     useEffect(() => {
         // Calcular el costo total
@@ -60,6 +66,7 @@ export const Cart = ({ cartItems, removeFromCart, updateQuantity, isCartModalOpe
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setFormError('');
 
         const payload = {
             code: code,
@@ -74,7 +81,6 @@ export const Cart = ({ cartItems, removeFromCart, updateQuantity, isCartModalOpe
         try {
             const response = await apiService.sendEmail(payload)
             if (response.status_code === 202) {
-                console.log('Email response:', response);
                 setEmailSent(true); // Actualiza el estado para mostrar el mensaje de confirmación
                 // Restablecer el formulario
                 setFormData({
@@ -84,11 +90,13 @@ export const Cart = ({ cartItems, removeFromCart, updateQuantity, isCartModalOpe
                 });
                 clearCart();
             } else {
-                console.log("Error sending email:", data);
+                console.error("Saving failed:", response);
+                setFormError(response.message);
             }
 
         } catch (error) {
-            console.error('Error sending email:', error);
+            console.error('Error saving request:', error);
+            setFormError("An issue with sending your request");
         }
     };
 
@@ -253,6 +261,12 @@ export const Cart = ({ cartItems, removeFromCart, updateQuantity, isCartModalOpe
                                                             />
                                                         </div>
                                                     </div>
+                                                    
+                                                    {formError && 
+                                                        <p className="mt-1 flex justify-center text-center text-sm text-red-600">
+                                                            {formError}
+                                                        </p>
+                                                    }
 
                                                     {/* QR and Form */}
                                                     <div className="flex flex-1 items-end justify-end text-sm">
@@ -265,7 +279,7 @@ export const Cart = ({ cartItems, removeFromCart, updateQuantity, isCartModalOpe
                                                                 ?
                                                                 <button type="submit" className='flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700'>Send Cart</button>
                                                                 :
-                                                                <button type="submit" className='flex items-center justify-center rounded-md border border-transparent bg-gray-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-gray-700' disabled>Submit</button>
+                                                                <button type="submit" className='flex items-center justify-center rounded-md border border-transparent bg-gray-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-gray-700' onClick={() => {event.preventDefault(); setFormError('Please fill in all fields')}}>Submit</button>
                                                             }
                                                         </div>
                                                     </div>
@@ -280,8 +294,15 @@ export const Cart = ({ cartItems, removeFromCart, updateQuantity, isCartModalOpe
 
 
                                             </div>
-                                            <div className="mt-1 flex justify-center text-center text-sm text-gray-500">
-                                                {emailSent && <div>Email sent successfully!</div>}
+                                            <div className="mt-1 text-sm text-gray-500">
+                                                {emailSent && 
+                                                    <div className="flex flex-col justify-center items-center text-center">
+                                                        <p>Email sent successfully!</p>
+                                                        <button type="button" onClick={toggleCartModal} className='mt-6 flex items-center justify-center rounded-md border border-transparent bg-gray-600 px-3 py-1.5 text-base font-medium text-white shadow-sm hover:bg-gray-700'>
+                                                            Close
+                                                        </button>
+                                                    </div>
+                                                }
                                             </div>
                                         </div>
                                     </div>

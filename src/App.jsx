@@ -98,7 +98,6 @@ function App() {
 
   const clearCart = () => {
     setCartItems([]);
-    setState([]);
   };
 
   const updateQuantity = (item, quantity) => {

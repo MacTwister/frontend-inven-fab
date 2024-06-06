@@ -18,7 +18,10 @@ function sendEmail(jsonData) {
         },
         body: JSON.stringify(jsonData)
     })
-    .then(response => response.json());
+    .then(response => response.json())
+    .catch(error => {
+      throw error;
+    });
 }
 
 export const apiService = {
