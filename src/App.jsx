@@ -138,12 +138,14 @@ function App() {
         </div>
 
         <div className='pt-20'>
-          <div className={`max-w-md pt-8 mx-auto ${styles.paragraph} text-center`}>
+          <div className={`max-w-2xl pt-8 mx-auto ${styles.paragraph} text-center`}>
             <p className={`text-2xl border-b border-dashed border-gray-500 pb-6 mb-6`}>
               Workshop Title: {codeTitle}
             </p>
             <p>
-              Ok, Thank you for telling us you do not require any materials from the FAB24 Inventory. If you have any questions, contact the FAB24 team!
+              Ok, Thank You for telling us you do not require any materials from the FAB24 Inventory. 
+              <br />
+              If you have any questions, contact the FAB24 team!
               <br />
               Have a magical day full of luck!
             </p>
