@@ -16,6 +16,7 @@ export const Cart = ({ cartItems, removeFromCart, updateQuantity, isCartModalOpe
         email: ''
     });
     const [isFormComplete, setIsFormComplete] = useState(false);
+    const [isSending, setIsSending] = useState(false);
     const [emailSent, setEmailSent] = useState(false);
     const [formError, setFormError] = useState('');
 
@@ -66,6 +67,13 @@ export const Cart = ({ cartItems, removeFromCart, updateQuantity, isCartModalOpe
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (isFormComplete === false) {
+            setFormError('Please fill in all fields')
+            
+            return;
+        }
+
         setFormError('');
 
         const payload = {
@@ -77,6 +85,8 @@ export const Cart = ({ cartItems, removeFromCart, updateQuantity, isCartModalOpe
             subtotal: totalCost.toFixed(2),
             formData: formData
         };
+
+        setIsSending(true);
 
         try {
             const response = await apiService.sendEmail(payload)
@@ -98,6 +108,8 @@ export const Cart = ({ cartItems, removeFromCart, updateQuantity, isCartModalOpe
             console.error('Error saving request:', error);
             setFormError("An issue with sending your request");
         }
+        
+        setTimeout(() => setIsSending(false), 1000);
     };
 
     if (!isCartModalOpen) return null;
@@ -275,12 +287,12 @@ export const Cart = ({ cartItems, removeFromCart, updateQuantity, isCartModalOpe
                                                         </div> */}
 
                                                         <div className="flex">
-                                                            {isFormComplete
-                                                                ?
-                                                                <button type="submit" className='flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700'>Send Cart</button>
-                                                                :
-                                                                <button type="submit" className='flex items-center justify-center rounded-md border border-transparent bg-gray-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-gray-700' onClick={() => {event.preventDefault(); setFormError('Please fill in all fields')}}>Submit</button>
-                                                            }
+                                                            <button type="submit" 
+                                                                className={`flex items-center justify-center rounded-md border border-transparent px-6 py-3 text-base font-medium text-white shadow-sm ${(!isSending && isFormComplete) ? "bg-indigo-600 hover:bg-indigo-700" : "bg-gray-600 hover:bg-gray-700"}`}
+                                                                disabled={isSending}
+                                                            >
+                                                                {isFormComplete ? (isSending ? 'Sending...' : 'Send Cart') : 'Submit'}
+                                                            </button>
                                                         </div>
                                                     </div>
 
